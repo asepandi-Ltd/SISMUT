@@ -16,9 +16,18 @@ export function normalizeSupabaseUrl(rawUrl?: string): string {
 }
 
 export function getSupabaseConfig() {
-  const rawUrl = process.env.VITE_SUPABASE_URL || process.env.SUPABASE_URL || '';
+  const rawUrl =
+    process.env.VITE_SUPABASE_URL ||
+    process.env.SUPABASE_URL ||
+    process.env.NEXT_PUBLIC_SUPABASE_URL ||
+    '';
   const url = normalizeSupabaseUrl(rawUrl);
-  const anonKey = (process.env.VITE_SUPABASE_ANON_KEY || process.env.SUPABASE_ANON_KEY || '').trim();
+  const anonKey = (
+    process.env.VITE_SUPABASE_ANON_KEY ||
+    process.env.SUPABASE_ANON_KEY ||
+    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY ||
+    ''
+  ).trim();
   const serviceRoleKey = (process.env.SUPABASE_SERVICE_ROLE_KEY || '').trim();
   const activeKey = serviceRoleKey || anonKey;
   return {
@@ -594,7 +603,7 @@ async function ensureSupabaseBuckets(sb: SupabaseClient) {
 
   for (const b of buckets) {
     if (!existingIds.has(b)) {
-      await sb.storage.createBucket(b, { public: b !== DB_BUCKET });
+      await sb.storage.createBucket(b, { public: true });
     }
   }
 }
