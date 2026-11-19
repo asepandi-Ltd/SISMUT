@@ -9,6 +9,7 @@ import {
   CheckCircle2,
   Save,
   AlertCircle,
+  Trash2,
 } from 'lucide-react';
 import { api } from '../services/api';
 import { useAuth } from '../contexts/AuthContext';
@@ -61,6 +62,9 @@ export function MonitoringPage({
   const [uploading, setUploading] = useState(false);
   const [saving, setSaving] = useState(false);
   const [feedback, setFeedback] = useState<{ type: 'ok' | 'err'; text: string } | null>(null);
+  const [deletingFinding, setDeletingFinding] = useState<Finding | null>(null);
+  const [deletingBusy, setDeletingBusy] = useState(false);
+  const [listMessage, setListMessage] = useState<{ type: 'ok' | 'err'; text: string } | null>(null);
   const [followUpForm, setFollowUpForm] = useState({
     root_cause: '',
     corrective_action: '',
@@ -193,6 +197,36 @@ export function MonitoringPage({
       });
     } finally {
       setSaving(false);
+    }
+  };
+
+  const handleConfirmDeleteFinding = async () => {
+    if (!deletingFinding) return;
+    setDeletingBusy(true);
+    setListMessage(null);
+    try {
+      const targetNum = deletingFinding.finding_number;
+      const targetUnit = deletingFinding.unit_name;
+      const targetId = deletingFinding.id;
+      await api.deleteFinding(targetId);
+      if (selectedFindingId === targetId) {
+        setSelectedFindingId(null);
+        setFeedback(null);
+      }
+      setDeletingFinding(null);
+      await loadData();
+      setListMessage({
+        type: 'ok',
+        text: `Data ketidaksesuaian & tindak lanjut ${targetNum} (${targetUnit}) berhasil dihapus dari database Supabase.`,
+      });
+    } catch (err: unknown) {
+      setListMessage({
+        type: 'err',
+        text: err instanceof Error ? err.message : 'Gagal menghapus data ketidaksesuaian.',
+      });
+      setDeletingFinding(null);
+    } finally {
+      setDeletingBusy(false);
     }
   };
 
@@ -455,14 +489,35 @@ export function MonitoringPage({
 
           {/* Table of Items Needing Follow-Up */}
           <section className="bg-white border border-slate-200 rounded-xl overflow-hidden">
-            <div className="px-5 py-3.5 border-b border-slate-200 flex items-center justify-between">
+            <div className="px-5 py-3.5 border-b border-slate-200 flex flex-wrap items-center justify-between gap-2">
               <h3 className="font-display text-sm font-bold text-[#142D42]">
                 Daftar Ketidaksesuaian &amp; Tindak Lanjut Perbaikan
               </h3>
               <span className="text-xs text-slate-500">
-                Klik tombol &ldquo;Tindak Lanjuti&rdquo; untuk mengisi atau memperbarui perbaikan
+                Klik &ldquo;Tindak Lanjuti&rdquo; untuk mengisi perbaikan atau &ldquo;Hapus&rdquo; untuk menghapus data
               </span>
             </div>
+            {listMessage && (
+              <div
+                className={`mx-5 mt-3 flex items-center justify-between gap-2 rounded-lg border px-4 py-2.5 text-xs font-medium ${
+                  listMessage.type === 'ok'
+                    ? 'border-[#238C89]/40 bg-[#E5F3EF] text-[#142D42]'
+                    : 'border-[#D9534F]/40 bg-[#D9534F]/5 text-[#D9534F]'
+                }`}
+              >
+                <div className="flex items-center gap-2">
+                  <AlertCircle className="w-4 h-4 shrink-0" />
+                  <span>{listMessage.text}</span>
+                </div>
+                <button
+                  type="button"
+                  onClick={() => setListMessage(null)}
+                  className="text-slate-400 hover:text-slate-600 cursor-pointer"
+                >
+                  <X className="w-3.5 h-3.5" />
+                </button>
+              </div>
+            )}
             <div className="overflow-x-auto">
               <table className="w-full text-left border-collapse">
                 <thead>
@@ -521,27 +576,38 @@ export function MonitoringPage({
                             <FindingStatusIndicator status={f.status} dueDate={f.due_date} />
                           </td>
                           <td className="py-3 px-4 text-right whitespace-nowrap">
-                            <button
-                              type="button"
-                              onClick={() => {
-                                setSelectedFindingId(isSelected ? null : f.id);
-                                setFeedback(null);
-                              }}
-                              className={`inline-flex items-center gap-1.5 rounded-lg px-3 py-1.5 text-xs font-semibold transition-colors cursor-pointer ${
-                                isSelected
-                                  ? 'bg-[#142D42] text-white'
-                                  : 'bg-[#238C89] text-white hover:bg-[#1d7875]'
-                              }`}
-                            >
-                              <Wrench className="w-3.5 h-3.5" />
-                              <span>
-                                {isSelected
-                                  ? 'Sedang Dibuka'
-                                  : f.status === 'Selesai'
-                                    ? 'Lihat / Edit Perbaikan'
-                                    : 'Tindak Lanjuti'}
-                              </span>
-                            </button>
+                            <div className="inline-flex items-center justify-end gap-2">
+                              <button
+                                type="button"
+                                onClick={() => {
+                                  setSelectedFindingId(isSelected ? null : f.id);
+                                  setFeedback(null);
+                                }}
+                                className={`inline-flex items-center gap-1.5 rounded-lg px-3 py-1.5 text-xs font-semibold transition-colors cursor-pointer ${
+                                  isSelected
+                                    ? 'bg-[#142D42] text-white'
+                                    : 'bg-[#238C89] text-white hover:bg-[#1d7875]'
+                                }`}
+                              >
+                                <Wrench className="w-3.5 h-3.5" />
+                                <span>
+                                  {isSelected
+                                    ? 'Sedang Dibuka'
+                                    : f.status === 'Selesai'
+                                      ? 'Lihat / Edit Perbaikan'
+                                      : 'Tindak Lanjuti'}
+                                </span>
+                              </button>
+                              <button
+                                type="button"
+                                onClick={() => setDeletingFinding(f)}
+                                className="inline-flex items-center gap-1 rounded-lg border border-[#D9534F]/30 bg-[#D9534F]/10 hover:bg-[#D9534F] text-[#D9534F] hover:text-white px-2.5 py-1.5 text-xs font-semibold transition-colors cursor-pointer"
+                                title={`Hapus data ${f.finding_number}`}
+                              >
+                                <Trash2 className="w-3.5 h-3.5" />
+                                <span>Hapus</span>
+                              </button>
+                            </div>
                           </td>
                         </tr>
                       );
@@ -706,6 +772,69 @@ export function MonitoringPage({
                   )}
                 </div>
               ))}
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Konfirmasi Hapus Data Ketidaksesuaian & Tindak Lanjut Perbaikan */}
+      {deletingFinding && (
+        <div className="fixed inset-0 z-50 bg-black/45 flex items-center justify-center p-4">
+          <div className="bg-white border border-slate-200 rounded-xl max-w-md w-full p-6 shadow-xl space-y-4">
+            <div className="flex items-start justify-between gap-3 border-b border-slate-100 pb-3">
+              <div className="flex items-center gap-2.5">
+                <div className="w-9 h-9 rounded-lg bg-[#D9534F]/10 text-[#D9534F] flex items-center justify-center shrink-0">
+                  <Trash2 className="w-4 h-4" />
+                </div>
+                <div>
+                  <h3 className="font-display text-sm font-bold text-[#142D42]">
+                    Hapus Data Ketidaksesuaian &amp; Tindak Lanjut
+                  </h3>
+                  <p className="text-[11px] text-slate-500 font-mono">
+                    {deletingFinding.finding_number} · {deletingFinding.unit_name}
+                  </p>
+                </div>
+              </div>
+              <button
+                type="button"
+                onClick={() => setDeletingFinding(null)}
+                className="rounded-lg p-1 text-slate-400 hover:text-slate-600 cursor-pointer"
+              >
+                <X className="w-4 h-4" />
+              </button>
+            </div>
+
+            <div className="space-y-2 text-xs text-slate-600">
+              <p>
+                Apakah Anda yakin ingin menghapus data ketidaksesuaian dan riwayat tindak lanjut
+                perbaikan berikut dari database Supabase?
+              </p>
+              <div className="rounded-lg bg-slate-50 border border-slate-200 p-3 space-y-1">
+                <p className="font-semibold text-[#142D42]">
+                  {deletingFinding.unit_name} ({deletingFinding.category_name})
+                </p>
+                <p className="text-slate-600">{deletingFinding.description}</p>
+              </div>
+            </div>
+
+            <div className="flex items-center justify-end gap-2 pt-2 border-t border-slate-100">
+              <button
+                type="button"
+                disabled={deletingBusy}
+                onClick={() => setDeletingFinding(null)}
+                className="rounded-lg border border-slate-300 px-4 py-2 text-xs font-semibold text-slate-700 hover:bg-slate-50 cursor-pointer"
+              >
+                Batal
+              </button>
+              <button
+                type="button"
+                disabled={deletingBusy}
+                onClick={handleConfirmDeleteFinding}
+                className="inline-flex items-center gap-1.5 rounded-lg bg-[#D9534F] hover:bg-[#c0392b] disabled:opacity-60 px-4 py-2 text-xs font-semibold text-white cursor-pointer"
+              >
+                <Trash2 className="w-3.5 h-3.5" />
+                <span>{deletingBusy ? 'Menghapus...' : 'Ya, Hapus Data'}</span>
+              </button>
             </div>
           </div>
         </div>

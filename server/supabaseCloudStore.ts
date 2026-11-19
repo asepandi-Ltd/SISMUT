@@ -195,11 +195,21 @@ export function buildInitialSeedDatabase(): SupabaseCloudDatabase {
   const inst1Id = 'c3449b10-0f88-5101-0a6d-402203956e83';
   const cat1Id = 'd4550c21-1a99-4212-9b7e-513314067f94';
   const cat2Id = 'e5661d32-2b00-4323-8c8f-624425178a05';
+  const cat3Id = 'f6772e43-3c11-4434-9d9a-835536289b99';
   const item1Id = 'f6772e43-3c11-4434-9d9a-735536289b16';
   const item2Id = 'a7883f54-4d22-4545-8e0b-846647390c27';
   const item3Id = 'b8994a65-5e33-4656-9f1c-957758401d38';
+  const item1_4Id = 'b8994a65-5e33-4656-9f1c-957758401d39';
+  const item1_5Id = 'b8994a65-5e33-4656-9f1c-957758401d40';
+  const item1_6Id = 'b8994a65-5e33-4656-9f1c-957758401d41';
   const item4Id = 'c9005b76-6f44-4767-8a2d-068869512e49';
   const item5Id = 'd0116c87-7a55-4878-9b3e-179970623f50';
+  const item3_1Id = 'e3016c87-7a55-4878-9b3e-179970623f51';
+  const item3_2Id = 'e3026c87-7a55-4878-9b3e-179970623f52';
+  const item3_3Id = 'e3036c87-7a55-4878-9b3e-179970623f53';
+  const item3_4Id = 'e3046c87-7a55-4878-9b3e-179970623f54';
+  const item3_5Id = 'e3056c87-7a55-4878-9b3e-179970623f55';
+  const item3_6Id = 'e3066c87-7a55-4878-9b3e-179970623f56';
 
   const instruments = [
     {
@@ -246,6 +256,33 @@ export function buildInitialSeedDatabase(): SupabaseCloudDatabase {
               is_active: true,
               sort_order: 3,
             },
+            {
+              id: item1_4Id,
+              category_id: cat1Id,
+              item_name: 'Kepastian tepat lokasi, tepat prosedur, dan tepat pasien operasi',
+              standard_description: 'Melakukan verifikasi pra-operasi, penandaan lokasi tindakan (site marking), dan time-out sebelum sayatan/tindakan invasif dimulai.',
+              weight: 2.0,
+              is_active: true,
+              sort_order: 4,
+            },
+            {
+              id: item1_5Id,
+              category_id: cat1Id,
+              item_name: 'Pengurangan risiko infeksi terkait pelayanan kesehatan',
+              standard_description: 'Mencegah infeksi nosokomial/HAIs, terutama melalui kepatuhan kebersihan tangan (hand hygiene) dan pencegahan infeksi pada pemasangan alat medis (seperti infus/kateter).',
+              weight: 1.5,
+              is_active: true,
+              sort_order: 5,
+            },
+            {
+              id: item1_6Id,
+              category_id: cat1Id,
+              item_name: 'Pengurangan risiko pasien jatuh',
+              standard_description: 'Melakukan skrining/penilaian risiko jatuh saat masuk, saat kondisi berubah, atau pasca-operasi, serta menerapkan pencegahan sesuai tingkat risiko pasien.',
+              weight: 1.5,
+              is_active: true,
+              sort_order: 6,
+            },
           ],
         },
         {
@@ -271,6 +308,68 @@ export function buildInitialSeedDatabase(): SupabaseCloudDatabase {
               weight: 1.5,
               is_active: true,
               sort_order: 2,
+            },
+          ],
+        },
+        {
+          id: cat3Id,
+          instrument_id: inst1Id,
+          category_name: 'Supervisi Mutu Lainnya',
+          sort_order: 3,
+          items: [
+            {
+              id: item3_1Id,
+              category_id: cat3Id,
+              item_name: 'Kelengkapan rekam medis',
+              standard_description: 'Pengisian berkas rekam medis pasien lengkap, akurat, terbaca jelas, dan tepat waktu sesuai standar akreditasi.',
+              weight: 1.5,
+              is_active: true,
+              sort_order: 1,
+            },
+            {
+              id: item3_2Id,
+              category_id: cat3Id,
+              item_name: 'Kepatuhan SOP',
+              standard_description: 'Pelaksanaan tindakan medis, keperawatan, dan pelayanan penunjang sesuai Standar Operasional Prosedur (SOP) yang berlaku.',
+              weight: 1.5,
+              is_active: true,
+              sort_order: 2,
+            },
+            {
+              id: item3_3Id,
+              category_id: cat3Id,
+              item_name: 'Ketersediaan obat emergensi',
+              standard_description: 'Obat-obatan dan alkes emergensi tersedia lengkap sesuai daftar standar, tidak kedaluwarsa, dan troli/kotak emergensi mudah diakses serta tersegel.',
+              weight: 2.0,
+              is_active: true,
+              sort_order: 3,
+            },
+            {
+              id: item3_4Id,
+              category_id: cat3Id,
+              item_name: 'Kelengkapan alat medis',
+              standard_description: 'Peralatan medis di unit pelayanan tersedia lengkap, siap pakai, berfungsi baik, dan memiliki stiker kalibrasi yang masih berlaku.',
+              weight: 1.5,
+              is_active: true,
+              sort_order: 4,
+            },
+            {
+              id: item3_5Id,
+              category_id: cat3Id,
+              item_name: 'Pelaporan insiden keselamatan pasien',
+              standard_description: 'Setiap Insiden Keselamatan Pasien (KTD, KNC, KTC, KPC, Sentinel) dicatat dan dilaporkan ke Komite Mutu maksimal 2x24 jam.',
+              weight: 1.5,
+              is_active: true,
+              sort_order: 5,
+            },
+            {
+              id: item3_6Id,
+              category_id: cat3Id,
+              item_name: 'Tindak lanjut temuan supervisi',
+              standard_description: 'Temuan ketidaksesuaian dari supervisi periode sebelumnya telah dievaluasi dan ditindaklanjuti perbaikannya oleh unit terkait.',
+              weight: 1.5,
+              is_active: true,
+              sort_order: 6,
             },
           ],
         },
@@ -690,6 +789,62 @@ export async function saveSupabaseDatabase(db: SupabaseCloudDatabase): Promise<v
   }
 }
 
+export function ensureInstrumentIndicatorsUpToDate(db: SupabaseCloudDatabase): boolean {
+  let modified = false;
+  const seed = buildInitialSeedDatabase();
+  const seedInst = seed.instruments[0];
+
+  if (!Array.isArray(db.instruments) || db.instruments.length === 0) {
+    db.instruments = seed.instruments;
+    return true;
+  }
+
+  const targetInst = db.instruments[0];
+  if (!Array.isArray(targetInst.categories)) {
+    targetInst.categories = seedInst.categories;
+    return true;
+  }
+
+  for (const seedCat of seedInst.categories) {
+    let existingCat = targetInst.categories.find(
+      (c: any) =>
+        c.id === seedCat.id ||
+        String(c.category_name || '').toLowerCase() ===
+          String(seedCat.category_name || '').toLowerCase()
+    );
+
+    if (!existingCat) {
+      targetInst.categories.push(seedCat);
+      modified = true;
+      continue;
+    }
+
+    if (!Array.isArray(existingCat.items)) {
+      existingCat.items = [...seedCat.items];
+      modified = true;
+      continue;
+    }
+
+    for (const seedItem of seedCat.items) {
+      const hasItem = existingCat.items.some(
+        (it: any) =>
+          it.id === seedItem.id ||
+          String(it.item_name || '').toLowerCase() ===
+            String(seedItem.item_name || '').toLowerCase()
+      );
+      if (!hasItem) {
+        existingCat.items.push({
+          ...seedItem,
+          category_id: existingCat.id,
+        });
+        modified = true;
+      }
+    }
+  }
+
+  return modified;
+}
+
 export async function loadSupabaseDatabase(forceRefresh = false): Promise<SupabaseCloudDatabase> {
   if (inMemoryCache && !forceRefresh) {
     return inMemoryCache;
@@ -710,13 +865,15 @@ export async function loadSupabaseDatabase(forceRefresh = false): Promise<Supaba
       try {
         const text = await blob.text();
         const parsed = JSON.parse(text) as SupabaseCloudDatabase;
+        let needsSave = ensureInstrumentIndicatorsUpToDate(parsed);
         if (!Array.isArray(parsed.profiles) || parsed.profiles.length === 0) {
           const seed = buildInitialSeedDatabase();
           parsed.profiles = seed.profiles;
-          await syncProfilesWithSupabaseAuth(sb, parsed.profiles);
+          needsSave = true;
+        }
+        await syncProfilesWithSupabaseAuth(sb, parsed.profiles);
+        if (needsSave) {
           await saveSupabaseDatabase(parsed);
-        } else {
-          await syncProfilesWithSupabaseAuth(sb, parsed.profiles);
         }
         inMemoryCache = parsed;
         return parsed;
@@ -732,6 +889,14 @@ export async function loadSupabaseDatabase(forceRefresh = false): Promise<Supaba
       if (res.ok) {
         const parsed = (await res.json()) as SupabaseCloudDatabase;
         if (parsed && Array.isArray(parsed.profiles) && parsed.profiles.length > 0) {
+          const needsSave = ensureInstrumentIndicatorsUpToDate(parsed);
+          if (needsSave) {
+            try {
+              await saveSupabaseDatabase(parsed);
+            } catch {
+              // ignore if read-only
+            }
+          }
           inMemoryCache = parsed;
           return parsed;
         }

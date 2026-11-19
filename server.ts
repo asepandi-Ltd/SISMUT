@@ -6,6 +6,9 @@ import { createServer as createViteServer } from 'vite';
 import { createApiApp } from './server/apiApp';
 import { getSupabaseConfig, loadSupabaseDatabase } from './server/supabaseCloudStore';
 
+// Ensure Vite HMR WebSocket is disabled in AI Studio iframe environment
+process.env.DISABLE_HMR = 'true';
+
 const PORT = 3000;
 
 async function startServer() {
@@ -25,7 +28,11 @@ async function startServer() {
 
   if (process.env.NODE_ENV !== 'production') {
     const vite = await createViteServer({
-      server: { middlewareMode: true, hmr: false },
+      server: {
+        middlewareMode: true,
+        hmr: false,
+        ws: false,
+      },
       appType: 'spa',
     });
     app.use(vite.middlewares);

@@ -183,7 +183,191 @@ function buildFallbackCloudSeed(): CloudDatabaseShape {
         created_at: now,
       },
     ],
-    instruments: [],
+    instruments: [
+      {
+        id: 'c3449b10-0f88-5101-0a6d-402203956e83',
+        instrument_name: 'Instrumen Supervisi Mutu Pelayanan Klinis & Keselamatan Pasien',
+        unit_category: 'INSTALASI GAWAT DARURAT',
+        version: 1,
+        parent_instrument_id: null,
+        description:
+          'Instrumen terpadu SKP, PPI, SOP Klinis, Obat High-Alert, dan Rekam Medis sesuai STARKES',
+        is_weighted: true,
+        is_active: true,
+        created_at: now,
+        categories: [
+          {
+            id: 'd4550c21-1a99-4212-9b7e-513314067f94',
+            instrument_id: 'c3449b10-0f88-5101-0a6d-402203956e83',
+            category_name: 'Sasaran Keselamatan Pasien (SKP)',
+            sort_order: 1,
+            items: [
+              {
+                id: 'f6772e43-3c11-4434-9d9a-735536289b16',
+                category_id: 'd4550c21-1a99-4212-9b7e-513314067f94',
+                item_name:
+                  'Kepatuhan identifikasi pasien dengan minimal 2 identitas (Nama & Tanggal Lahir/No. RM)',
+                standard_description:
+                  'Petugas memverifikasi gelang identitas secara aktif sebelum tindakan/pemberian obat.',
+                weight: 2.0,
+                is_active: true,
+                sort_order: 1,
+              },
+              {
+                id: 'a7883f54-4d22-4545-8e0b-846647390c27',
+                category_id: 'd4550c21-1a99-4212-9b7e-513314067f94',
+                item_name:
+                  'Penerapan komunikasi efektif SBAR dan TBAK pada serah terima / instruksi lisan',
+                standard_description:
+                  'Dokumentasi stempel Read-Back terisi lengkap dalam 24 jam pada CPPT.',
+                weight: 1.5,
+                is_active: true,
+                sort_order: 2,
+              },
+              {
+                id: 'b8994a65-5e33-4656-9f1c-957758401d38',
+                category_id: 'd4550c21-1a99-4212-9b7e-513314067f94',
+                item_name:
+                  'Penandaan dan penyimpanan obat High-Alert & LASA terpisah dengan stiker jelas',
+                standard_description:
+                  'Lemari obat emergensi terkunci segel bernomor dan tidak ada elektrolit konsentrat terbuka.',
+                weight: 2.0,
+                is_active: true,
+                sort_order: 3,
+              },
+              {
+                id: 'b8994a65-5e33-4656-9f1c-957758401d39',
+                category_id: 'd4550c21-1a99-4212-9b7e-513314067f94',
+                item_name: 'Kepastian tepat lokasi, tepat prosedur, dan tepat pasien operasi',
+                standard_description:
+                  'Melakukan verifikasi pra-operasi, penandaan lokasi tindakan (site marking), dan time-out sebelum sayatan/tindakan invasif dimulai.',
+                weight: 2.0,
+                is_active: true,
+                sort_order: 4,
+              },
+              {
+                id: 'b8994a65-5e33-4656-9f1c-957758401d40',
+                category_id: 'd4550c21-1a99-4212-9b7e-513314067f94',
+                item_name: 'Pengurangan risiko infeksi terkait pelayanan kesehatan',
+                standard_description:
+                  'Mencegah infeksi nosokomial/HAIs, terutama melalui kepatuhan kebersihan tangan (hand hygiene) dan pencegahan infeksi pada pemasangan alat medis (seperti infus/kateter).',
+                weight: 1.5,
+                is_active: true,
+                sort_order: 5,
+              },
+              {
+                id: 'b8994a65-5e33-4656-9f1c-957758401d41',
+                category_id: 'd4550c21-1a99-4212-9b7e-513314067f94',
+                item_name: 'Pengurangan risiko pasien jatuh',
+                standard_description:
+                  'Melakukan skrining/penilaian risiko jatuh saat masuk, saat kondisi berubah, atau pasca-operasi, serta menerapkan pencegahan sesuai tingkat risiko pasien.',
+                weight: 1.5,
+                is_active: true,
+                sort_order: 6,
+              },
+            ],
+          },
+          {
+            id: 'e5661d32-2b00-4323-8c8f-624425178a05',
+            instrument_id: 'c3449b10-0f88-5101-0a6d-402203956e83',
+            category_name: 'Pencegahan & Pengendalian Infeksi (PPI) dan Kesiapan Fasilitas',
+            sort_order: 2,
+            items: [
+              {
+                id: 'c9005b76-6f44-4767-8a2d-068869512e49',
+                category_id: 'e5661d32-2b00-4323-8c8f-624425178a05',
+                item_name:
+                  'Ketersediaan handrub berbasis alkohol di setiap titik perawatan dan kepatuhan 5 momen cuci tangan',
+                standard_description:
+                  'Seluruh dispenser terisi, berfungsi baik, dan petugas patuh 6 langkah.',
+                weight: 1.5,
+                is_active: true,
+                sort_order: 1,
+              },
+              {
+                id: 'd0116c87-7a55-4878-9b3e-179970623f50',
+                category_id: 'e5661d32-2b00-4323-8c8f-624425178a05',
+                item_name:
+                  'Pemilahan limbah medis tajam (safety box) dan limbah infeksius tidak melebihi 3/4 kapasitas',
+                standard_description:
+                  'Safety box tertutup rapat, diberi label tanggal mulai pakai, dan tidak meluber.',
+                weight: 1.5,
+                is_active: true,
+                sort_order: 2,
+              },
+            ],
+          },
+          {
+            id: 'f6772e43-3c11-4434-9d9a-835536289b99',
+            instrument_id: 'c3449b10-0f88-5101-0a6d-402203956e83',
+            category_name: 'Supervisi Mutu Lainnya',
+            sort_order: 3,
+            items: [
+              {
+                id: 'e3016c87-7a55-4878-9b3e-179970623f51',
+                category_id: 'f6772e43-3c11-4434-9d9a-835536289b99',
+                item_name: 'Kelengkapan rekam medis',
+                standard_description:
+                  'Pengisian berkas rekam medis pasien lengkap, akurat, terbaca jelas, dan tepat waktu sesuai standar akreditasi.',
+                weight: 1.5,
+                is_active: true,
+                sort_order: 1,
+              },
+              {
+                id: 'e3026c87-7a55-4878-9b3e-179970623f52',
+                category_id: 'f6772e43-3c11-4434-9d9a-835536289b99',
+                item_name: 'Kepatuhan SOP',
+                standard_description:
+                  'Pelaksanaan tindakan medis, keperawatan, dan pelayanan penunjang sesuai Standar Operasional Prosedur (SOP) yang berlaku.',
+                weight: 1.5,
+                is_active: true,
+                sort_order: 2,
+              },
+              {
+                id: 'e3036c87-7a55-4878-9b3e-179970623f53',
+                category_id: 'f6772e43-3c11-4434-9d9a-835536289b99',
+                item_name: 'Ketersediaan obat emergensi',
+                standard_description:
+                  'Obat-obatan dan alkes emergensi tersedia lengkap sesuai daftar standar, tidak kedaluwarsa, dan troli/kotak emergensi mudah diakses serta tersegel.',
+                weight: 2.0,
+                is_active: true,
+                sort_order: 3,
+              },
+              {
+                id: 'e3046c87-7a55-4878-9b3e-179970623f54',
+                category_id: 'f6772e43-3c11-4434-9d9a-835536289b99',
+                item_name: 'Kelengkapan alat medis',
+                standard_description:
+                  'Peralatan medis di unit pelayanan tersedia lengkap, siap pakai, berfungsi baik, dan memiliki stiker kalibrasi yang masih berlaku.',
+                weight: 1.5,
+                is_active: true,
+                sort_order: 4,
+              },
+              {
+                id: 'e3056c87-7a55-4878-9b3e-179970623f55',
+                category_id: 'f6772e43-3c11-4434-9d9a-835536289b99',
+                item_name: 'Pelaporan insiden keselamatan pasien',
+                standard_description:
+                  'Setiap Insiden Keselamatan Pasien (KTD, KNC, KTC, KPC, Sentinel) dicatat dan dilaporkan ke Komite Mutu maksimal 2x24 jam.',
+                weight: 1.5,
+                is_active: true,
+                sort_order: 5,
+              },
+              {
+                id: 'e3066c87-7a55-4878-9b3e-179970623f56',
+                category_id: 'f6772e43-3c11-4434-9d9a-835536289b99',
+                item_name: 'Tindak lanjut temuan supervisi',
+                standard_description:
+                  'Temuan ketidaksesuaian dari supervisi periode sebelumnya telah dievaluasi dan ditindaklanjuti perbaikannya oleh unit terkait.',
+                weight: 1.5,
+                is_active: true,
+                sort_order: 6,
+              },
+            ],
+          },
+        ],
+      },
+    ],
     schedules: [],
     supervisions: [],
     supervision_answers: {},
@@ -195,6 +379,50 @@ function buildFallbackCloudSeed(): CloudDatabaseShape {
   };
 }
 
+function ensureClientInstrumentIndicatorsUpToDate(db: CloudDatabaseShape): void {
+  const seed = buildFallbackCloudSeed();
+  const seedInst = seed.instruments[0];
+  if (!Array.isArray(db.instruments) || db.instruments.length === 0) {
+    db.instruments = seed.instruments;
+    return;
+  }
+  const targetInst = db.instruments[0];
+  if (!Array.isArray(targetInst.categories)) {
+    targetInst.categories = seedInst.categories;
+    return;
+  }
+  for (const seedCat of seedInst.categories || []) {
+    const existingCat = targetInst.categories.find(
+      (c) =>
+        c.id === seedCat.id ||
+        String(c.category_name || '').toLowerCase() ===
+          String(seedCat.category_name || '').toLowerCase()
+    );
+    if (!existingCat) {
+      targetInst.categories.push(seedCat);
+      continue;
+    }
+    if (!Array.isArray(existingCat.items)) {
+      existingCat.items = [...(seedCat.items || [])];
+      continue;
+    }
+    for (const seedItem of seedCat.items || []) {
+      const hasItem = existingCat.items.some(
+        (it) =>
+          it.id === seedItem.id ||
+          String(it.item_name || '').toLowerCase() ===
+            String(seedItem.item_name || '').toLowerCase()
+      );
+      if (!hasItem) {
+        existingCat.items.push({
+          ...seedItem,
+          category_id: existingCat.id,
+        });
+      }
+    }
+  }
+}
+
 let cachedCloudDb: CloudDatabaseShape | null = null;
 
 async function fetchDirectSupabaseCloudDb(): Promise<CloudDatabaseShape> {
@@ -204,6 +432,7 @@ async function fetchDirectSupabaseCloudDb(): Promise<CloudDatabaseShape> {
     if (res.ok) {
       const parsed = (await res.json()) as CloudDatabaseShape;
       if (parsed && Array.isArray(parsed.profiles) && parsed.profiles.length > 0) {
+        ensureClientInstrumentIndicatorsUpToDate(parsed);
         cachedCloudDb = parsed;
         return parsed;
       }
@@ -218,6 +447,7 @@ async function fetchDirectSupabaseCloudDb(): Promise<CloudDatabaseShape> {
       const text = await data.text();
       const parsed = JSON.parse(text) as CloudDatabaseShape;
       if (parsed && Array.isArray(parsed.profiles) && parsed.profiles.length > 0) {
+        ensureClientInstrumentIndicatorsUpToDate(parsed);
         cachedCloudDb = parsed;
         return parsed;
       }
@@ -1100,6 +1330,23 @@ export const api = {
         db.findings[idx] = { ...db.findings[idx], ...payload };
         await saveDirectSupabaseCloudDb(db);
         return db.findings[idx];
+      }
+    );
+  },
+
+  async deleteFinding(id: string): Promise<{ ok: boolean }> {
+    return supabaseApiFetch<{ ok: boolean }>(
+      `/api/findings/${id}`,
+      {
+        method: 'DELETE',
+      },
+      async () => {
+        const db = await fetchDirectSupabaseCloudDb();
+        db.findings = db.findings.filter((f) => f.id !== id);
+        db.follow_ups = (db.follow_ups || []).filter((fu) => fu.finding_id !== id);
+        db.verification_logs = (db.verification_logs || []).filter((v) => v.finding_id !== id);
+        await saveDirectSupabaseCloudDb(db);
+        return { ok: true };
       }
     );
   },

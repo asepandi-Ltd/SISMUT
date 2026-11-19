@@ -1,5 +1,5 @@
 import React, { createContext, useContext, useEffect, useState, useCallback } from 'react';
-import { isSupabaseConfigured, supabase } from '../lib/supabase';
+import { isSupabaseConfigured } from '../lib/supabase';
 import { api } from '../services/api';
 import { useAuth } from './AuthContext';
 import type { AppNotification } from '../types/sismut';
@@ -29,13 +29,14 @@ export function RealtimeProvider({ children }: { children: React.ReactNode }) {
     try {
       const list = await api.getNotifications();
       setNotifications(list);
+      setConnected(true);
     } catch {
       // ignore transient errors
     }
   }, [user]);
 
   useEffect(() => {
-    if (!user || !isSupabaseConfigured || !supabase) {
+    if (!user || !isSupabaseConfigured) {
       setNotifications([]);
       setConnected(false);
       return;
@@ -43,40 +44,14 @@ export function RealtimeProvider({ children }: { children: React.ReactNode }) {
 
     refreshNotifications();
 
-    const sb = supabase;
-    const channel = sb
-      .channel('sismut-supabase-realtime')
-      .on('postgres_changes', { event: '*', schema: 'public', table: 'supervisions' }, () => {
-        setRevision((r) => r + 1);
-        setLastEvent({ event: 'supervision:updated', timestamp: new Date().toISOString() });
-      })
-      .on('postgres_changes', { event: '*', schema: 'public', table: 'findings' }, () => {
-        setRevision((r) => r + 1);
-        setLastEvent({ event: 'finding:updated', timestamp: new Date().toISOString() });
-        refreshNotifications();
-      })
-      .on('postgres_changes', { event: '*', schema: 'public', table: 'follow_ups' }, () => {
-        setRevision((r) => r + 1);
-        setLastEvent({ event: 'followup:submitted', timestamp: new Date().toISOString() });
-        refreshNotifications();
-      })
-      .on('postgres_changes', { event: '*', schema: 'public', table: 'profiles' }, () => {
-        setRevision((r) => r + 1);
-        setLastEvent({ event: 'profiles:updated', timestamp: new Date().toISOString() });
-      })
-      .on('postgres_changes', { event: '*', schema: 'public', table: 'units' }, () => {
-        setRevision((r) => r + 1);
-        setLastEvent({ event: 'units:updated', timestamp: new Date().toISOString() });
-      })
-      .on('postgres_changes', { event: '*', schema: 'public', table: 'notifications' }, () => {
-        refreshNotifications();
-      })
-      .subscribe((status) => {
-        setConnected(status === 'SUBSCRIBED');
-      });
+    const intervalId = window.setInterval(() => {
+      refreshNotifications();
+      setRevision((r) => r + 1);
+      setLastEvent({ event: 'supabase:synced', timestamp: new Date().toISOString() });
+    }, 30000);
 
     return () => {
-      sb.removeChannel(channel);
+      window.clearInterval(intervalId);
     };
   }, [user, refreshNotifications]);
 

@@ -915,6 +915,41 @@ export function createApiApp() {
     }
   });
 
+  app.delete('/api/findings/:id', async (req, res) => {
+    try {
+      const db = await loadSupabaseDatabase();
+      const target = db.findings.find((f) => f.id === req.params.id);
+      if (!target) {
+        return res.status(404).json({ error: 'Data ketidaksesuaian tidak ditemukan di Supabase.' });
+      }
+
+      db.findings = db.findings.filter((f) => f.id !== req.params.id);
+      db.follow_ups = (db.follow_ups || []).filter((fu) => fu.finding_id !== req.params.id);
+      db.verification_logs = (db.verification_logs || []).filter(
+        (v) => v.finding_id !== req.params.id
+      );
+
+      db.audit_logs.unshift({
+        id: crypto.randomUUID(),
+        user_id: null,
+        user_name: 'Petugas SISMUT',
+        user_role: 'SUPER_ADMIN',
+        action: 'DELETE_FINDING',
+        table_name: 'findings',
+        record_id: req.params.id,
+        reason: `Menghapus ketidaksesuaian ${target.finding_number} (${target.unit_name}) beserta tindak lanjut perbaikan dari Supabase`,
+        old_data: target,
+        new_data: null,
+        created_at: new Date().toISOString(),
+      });
+
+      await saveSupabaseDatabase(db);
+      return res.json({ ok: true });
+    } catch (err: any) {
+      return res.status(500).json({ error: err.message });
+    }
+  });
+
   app.post('/api/follow-ups', async (req, res) => {
     try {
       const db = await loadSupabaseDatabase();
