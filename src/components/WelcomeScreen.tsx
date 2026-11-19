@@ -21,13 +21,50 @@ interface WelcomeScreenProps {
   onEnter: () => void;
 }
 
-const DEFAULT_WELCOME_IMAGE = '/src/assets/images/welcome_hospital_interior_1794923926771.jpg';
+const DEFAULT_WELCOME_IMAGE =
+  'https://hqqvbtxfantvoplfcxmt.supabase.co/storage/v1/object/public/application-assets/1795052367570-36651b18-fd2d-41b5-96e0-0fd02d2303a0-wiwin.png';
+
+const INITIAL_SUPABASE_USERS: Profile[] = [
+  {
+    id: '33d465bb-47ff-4642-aa33-286a93802f7a',
+    email: 'superadmin@rsudalmulk.go.id',
+    full_name: 'Asep Andi J',
+    role: 'SUPER_ADMIN',
+    unit_id: '61f0d938-d124-4ef4-942c-67c338f0a4bb',
+    unit_name: 'Unit Mutu',
+    position_title: 'Kepala Seksi Penunjang, Mutu, Humas, dan Pemasaran',
+    is_active: true,
+    created_at: '2026-11-18T18:54:56.817Z',
+  },
+  {
+    id: '240c4578-9d88-4012-a81b-ef2543d7186a',
+    email: 'komitemutu@rsudalmulk.go.id',
+    full_name: 'Wiwin Kusmiati',
+    role: 'KOMITE_MUTU',
+    unit_id: '61f0d938-d124-4ef4-942c-67c338f0a4bb',
+    unit_name: 'Unit Mutu',
+    position_title: 'Komite Mutu RSUD Al-Mulk',
+    is_active: true,
+    created_at: '2026-11-18T18:54:56.817Z',
+  },
+  {
+    id: 'c8822749-f09e-4c41-a6e7-a163274a2234',
+    email: 'manajemen@rsudalmulk.go.id',
+    full_name: 'Dr. Deni Purnama, MKM.,MARS',
+    role: 'MANAJEMEN',
+    unit_id: null,
+    unit_name: null,
+    position_title: 'Direktur / Manajemen RSUD Al-Mulk Kota Sukabumi',
+    is_active: true,
+    created_at: '2026-11-18T18:54:56.817Z',
+  },
+];
 
 export function WelcomeScreen({ onEnter }: WelcomeScreenProps) {
   const { login } = useAuth();
   const [now, setNow] = useState(() => new Date());
-  const [users, setUsers] = useState<Profile[]>([]);
-  const [selectedUserId, setSelectedUserId] = useState<string>('');
+  const [users, setUsers] = useState<Profile[]>(INITIAL_SUPABASE_USERS);
+  const [selectedUserId, setSelectedUserId] = useState<string>(INITIAL_SUPABASE_USERS[0].id);
   const [loggingIn, setLoggingIn] = useState(false);
   const [loginError, setLoginError] = useState('');
 

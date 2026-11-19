@@ -4,9 +4,12 @@ import express from 'express';
 import {
   createSupabaseAuthUser,
   deleteSupabaseAuthUser,
+  getSupabaseAdminClient,
   getSupabaseConfig,
   loadSupabaseDatabase,
   saveSupabaseDatabase,
+  syncProfilesWithSupabaseAuth,
+  updateSupabaseAuthUser,
   uploadToSupabaseBucket,
 } from './supabaseCloudStore';
 
@@ -202,8 +205,28 @@ export function createApiApp() {
       };
 
       db.profiles[idx] = updated;
+      await updateSupabaseAuthUser(updated);
       await saveSupabaseDatabase(db);
       return res.json(updated);
+    } catch (err: any) {
+      return res.status(500).json({ error: err.message });
+    }
+  });
+
+  app.post('/api/supabase/sync', async (_req, res) => {
+    try {
+      const db = await loadSupabaseDatabase(true);
+      const sb = getSupabaseAdminClient();
+      await syncProfilesWithSupabaseAuth(sb, db.profiles);
+      await saveSupabaseDatabase(db);
+      return res.json({
+        ok: true,
+        profiles: db.profiles.length,
+        units: db.units.length,
+        supervisions: db.supervisions.length,
+        findings: db.findings.length,
+        updated_at: db.updated_at,
+      });
     } catch (err: any) {
       return res.status(500).json({ error: err.message });
     }

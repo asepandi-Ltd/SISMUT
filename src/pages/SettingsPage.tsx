@@ -25,7 +25,8 @@ interface SettingsPageProps {
   tab?: 'users' | 'access-rights' | 'app-config' | 'audit-trail';
 }
 
-const DEFAULT_WELCOME_IMAGE = '/src/assets/images/welcome_hospital_interior_1794923926771.jpg';
+const DEFAULT_WELCOME_IMAGE =
+  'https://hqqvbtxfantvoplfcxmt.supabase.co/storage/v1/object/public/application-assets/1795052367570-36651b18-fd2d-41b5-96e0-0fd02d2303a0-wiwin.png';
 
 export function SettingsPage({ tab = 'app-config' }: SettingsPageProps) {
   const [activeSection, setActiveSection] = useState<
