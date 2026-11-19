@@ -1,0 +1,8 @@
+{
+  "name": "SISMUT — Sistem Informasi Supervisi Mutu RSUD Al-Mulk",
+  "description": "Sistem Informasi Supervisi Mutu Rumah Sakit RSUD Al-Mulk Kota Sukabumi. Mutu Terjaga, Pelayanan Terpercaya.",
+  "requestFramePermissions": [],
+  "majorCapabilities": [
+    "MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"
+  ]
+}
