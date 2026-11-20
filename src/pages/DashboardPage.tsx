@@ -23,6 +23,7 @@ import {
   ShieldAlert,
   TrendingUp,
   RotateCcw,
+  Trash2,
 } from 'lucide-react';
 import { api } from '../services/api';
 import { useRealtime } from '../contexts/RealtimeContext';
@@ -49,6 +50,8 @@ export function DashboardPage({ onNavigate }: DashboardPageProps) {
   const [supervisions, setSupervisions] = useState<Supervision[]>([]);
   const [findings, setFindings] = useState<Finding[]>([]);
   const [loading, setLoading] = useState(true);
+  const [deleteTarget, setDeleteTarget] = useState<Supervision | null>(null);
+  const [deleting, setDeleting] = useState(false);
 
   const [filters, setFilters] = useState<DashboardFilters>({
     year: 'ALL',
@@ -144,7 +147,7 @@ export function DashboardPage({ onNavigate }: DashboardPageProps) {
     ).length;
     const overdueFindings = filteredFindings.filter((f) => f.status === 'Terlambat').length;
     const completedFindings = filteredFindings.filter((f) => f.status === 'Selesai').length;
-    const completionPct = totalFindings > 0 ? (completedFindings / totalFindings) * 100 : 100;
+    const completionPct = totalFindings > 0 ? (completedFindings / totalFindings) * 100 : 0;
 
     return {
       totalRegisteredUnits,
@@ -672,33 +675,98 @@ export function DashboardPage({ onNavigate }: DashboardPageProps) {
                 <th className="py-2 px-3">Tanggal</th>
                 <th className="py-2 px-3">Supervisor</th>
                 <th className="py-2 px-3 text-right">Skor</th>
-                <th className="py-2 pl-3">Status</th>
+                <th className="py-2 px-3">Status</th>
+                <th className="py-2 pl-3 text-right">Aksi</th>
               </tr>
             </thead>
             <tbody className="divide-y divide-slate-100 text-xs">
-              {filteredSupervisions.slice(0, 6).map((s) => (
-                <tr key={s.id} className="hover:bg-slate-50">
-                  <td className="py-2.5 pr-3 font-mono font-semibold text-[#142D42]">
-                    {s.supervision_number}
-                  </td>
-                  <td className="py-2.5 px-3 font-medium text-[#243447]">{s.unit_name}</td>
-                  <td className="py-2.5 px-3 text-slate-600">{s.period_name}</td>
-                  <td className="py-2.5 px-3 font-mono text-slate-600 tabular-nums">
-                    {s.supervision_date.slice(0, 10)}
-                  </td>
-                  <td className="py-2.5 px-3 text-slate-600">{s.supervisor_name}</td>
-                  <td className="py-2.5 px-3 text-right font-mono font-bold text-[#142D42] tabular-nums">
-                    {Number(s.total_score).toFixed(1)}%
-                  </td>
-                  <td className="py-2.5 pl-3">
-                    <SupervisionStatusIndicator status={s.status} />
+              {filteredSupervisions.length === 0 ? (
+                <tr>
+                  <td colSpan={8} className="py-8 text-center text-slate-400">
+                    Belum ada data penginputan supervisi pada periode/filter ini.
                   </td>
                 </tr>
-              ))}
+              ) : (
+                filteredSupervisions.slice(0, 6).map((s) => (
+                  <tr key={s.id} className="hover:bg-slate-50">
+                    <td className="py-2.5 pr-3 font-mono font-semibold text-[#142D42]">
+                      {s.supervision_number}
+                    </td>
+                    <td className="py-2.5 px-3 font-medium text-[#243447]">{s.unit_name}</td>
+                    <td className="py-2.5 px-3 text-slate-600">{s.period_name}</td>
+                    <td className="py-2.5 px-3 font-mono text-slate-600 tabular-nums">
+                      {s.supervision_date.slice(0, 10)}
+                    </td>
+                    <td className="py-2.5 px-3 text-slate-600">{s.supervisor_name}</td>
+                    <td className="py-2.5 px-3 text-right font-mono font-bold text-[#142D42] tabular-nums">
+                      {Number(s.total_score).toFixed(1)}%
+                    </td>
+                    <td className="py-2.5 px-3">
+                      <SupervisionStatusIndicator status={s.status} />
+                    </td>
+                    <td className="py-2.5 pl-3 text-right">
+                      <button
+                        type="button"
+                        onClick={() => setDeleteTarget(s)}
+                        className="inline-flex items-center gap-1 px-2 py-1 rounded border border-red-200 text-[#D9534F] hover:bg-red-50 text-[11px] font-semibold cursor-pointer"
+                        title="Hapus Data Supervisi & Capaian"
+                      >
+                        <Trash2 className="w-3 h-3" />
+                        Hapus
+                      </button>
+                    </td>
+                  </tr>
+                ))
+              )}
             </tbody>
           </table>
         </div>
       </section>
+
+      {deleteTarget && (
+        <div className="fixed inset-0 z-50 bg-slate-900/50 flex items-center justify-center p-4">
+          <div className="bg-white rounded-xl border border-slate-200 max-w-md w-full p-5 shadow-xl">
+            <h3 className="font-display text-base font-bold text-[#142D42]">
+              Hapus Data Supervisi & Capaian
+            </h3>
+            <p className="text-xs text-slate-600 mt-2 leading-relaxed">
+              Apakah Anda yakin ingin menghapus data supervisi{' '}
+              <span className="font-mono font-bold text-[#142D42]">
+                {deleteTarget.supervision_number}
+              </span>{' '}
+              pada unit <span className="font-semibold text-[#142D42]">{deleteTarget.unit_name}</span>?
+              Seluruh data capaian dan temuan terkait supervisi ini juga akan ikut dihapus.
+            </p>
+            <div className="flex items-center justify-end gap-2 mt-5">
+              <button
+                type="button"
+                disabled={deleting}
+                onClick={() => setDeleteTarget(null)}
+                className="px-3 py-1.5 rounded-lg border border-slate-300 text-xs font-semibold text-slate-700 hover:bg-slate-50 cursor-pointer"
+              >
+                Batal
+              </button>
+              <button
+                type="button"
+                disabled={deleting}
+                onClick={async () => {
+                  try {
+                    setDeleting(true);
+                    await api.deleteSupervision(deleteTarget.id);
+                    setDeleteTarget(null);
+                    await loadData();
+                  } finally {
+                    setDeleting(false);
+                  }
+                }}
+                className="px-3 py-1.5 rounded-lg bg-[#D9534F] text-white text-xs font-semibold hover:bg-red-700 cursor-pointer disabled:opacity-50"
+              >
+                {deleting ? 'Menghapus...' : 'Ya, Hapus Data'}
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }

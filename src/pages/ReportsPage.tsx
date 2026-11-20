@@ -104,7 +104,7 @@ export function ReportsPage({ defaultTab, customRecommendations }: ReportsPagePr
     const pctDone =
       filteredFindings.length > 0
         ? ((doneFindings / filteredFindings.length) * 100).toFixed(1)
-        : '100.0';
+        : '0.0';
 
     let tableHeaders: string[] = [];
     let tableRows: Array<Array<string | number>> = [];

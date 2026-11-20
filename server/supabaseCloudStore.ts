@@ -377,267 +377,6 @@ export function buildInitialSeedDatabase(): SupabaseCloudDatabase {
     },
   ];
 
-  const sup1Id = 'e1227d98-8b66-4989-8c4f-280081734a61';
-  const sup2Id = 'f2338e09-9c77-4090-9d5a-391192845b72';
-  const komiteProfile = profiles[1];
-
-  const supervisions = [
-    {
-      id: sup1Id,
-      supervision_number: 'SUP-202611-101',
-      schedule_id: null,
-      unit_id: unitIdByCode['IGD-01'],
-      unit_name: 'IGD',
-      unit_category: 'INSTALASI GAWAT DARURAT',
-      period_id: period1Id,
-      period_name: 'Triwulan IV 2026 (Okt–Des)',
-      instrument_id: inst1Id,
-      instrument_name: 'Instrumen Supervisi Mutu Pelayanan Klinis & Keselamatan Pasien',
-      instrument_version: 1,
-      supervisor_id: komiteProfile.id,
-      supervisor_name: komiteProfile.full_name,
-      team_members: 'Wiwin Kusmiati',
-      supervision_date: '2026-11-15T09:00:00.000Z',
-      status: 'Final',
-      total_score: 76.47,
-      compliant_count: 4,
-      applicable_count: 5,
-      notes: 'Supervisi mutu pelayanan IGD shift pagi. Ditemukan 1 ketidaksesuaian pada pelabelan obat High-Alert di troli emergensi.',
-      finalized_at: '2026-11-15T10:30:00.000Z',
-      finalized_by: komiteProfile.id,
-      created_at: now,
-    },
-    {
-      id: sup2Id,
-      supervision_number: 'SUP-202611-102',
-      schedule_id: null,
-      unit_id: unitIdByCode['RI-01'],
-      unit_name: 'Ruang Perawatan',
-      unit_category: 'RAWAT INAP',
-      period_id: period1Id,
-      period_name: 'Triwulan IV 2026 (Okt–Des)',
-      instrument_id: inst1Id,
-      instrument_name: 'Instrumen Supervisi Mutu Pelayanan Klinis & Keselamatan Pasien',
-      instrument_version: 1,
-      supervisor_id: komiteProfile.id,
-      supervisor_name: komiteProfile.full_name,
-      team_members: 'Wiwin Kusmiati',
-      supervision_date: '2026-11-16T10:00:00.000Z',
-      status: 'Final',
-      total_score: 82.35,
-      compliant_count: 4,
-      applicable_count: 5,
-      notes: 'Supervisi ruang perawatan rawat inap berjalan baik, perlu tindak lanjut kelengkapan stempel TBAK pada CPPT.',
-      finalized_at: '2026-11-16T11:15:00.000Z',
-      finalized_by: komiteProfile.id,
-      created_at: now,
-    },
-  ];
-
-  const supervision_answers: Record<string, any[]> = {
-    [sup1Id]: [
-      {
-        id: 'a1000001-0000-4000-8000-000000000001',
-        supervision_id: sup1Id,
-        instrument_item_id: item1Id,
-        item_name_snapshot: 'Kepatuhan identifikasi pasien dengan minimal 2 identitas (Nama & Tanggal Lahir/No. RM)',
-        category_name_snapshot: 'Sasaran Keselamatan Pasien (SKP)',
-        weight_snapshot: 2.0,
-        answer: 'Sesuai',
-        notes: 'Gelang identitas terpasang dan diverifikasi aktif oleh perawat.',
-        supporting_evidence: 'Observasi langsung 5 pasien IGD',
-        evidence_url: '',
-        recommendation: 'Pertahankan kepatuhan identifikasi.',
-      },
-      {
-        id: 'a1000001-0000-4000-8000-000000000002',
-        supervision_id: sup1Id,
-        instrument_item_id: item2Id,
-        item_name_snapshot: 'Penerapan komunikasi efektif SBAR dan TBAK pada serah terima / instruksi lisan',
-        category_name_snapshot: 'Sasaran Keselamatan Pasien (SKP)',
-        weight_snapshot: 1.5,
-        answer: 'Sesuai',
-        notes: 'Dokumentasi SBAR dan TBAK terisi lengkap.',
-        supporting_evidence: 'Cek berkas rekam medis IGD',
-        evidence_url: '',
-        recommendation: '',
-      },
-      {
-        id: 'a1000001-0000-4000-8000-000000000003',
-        supervision_id: sup1Id,
-        instrument_item_id: item3Id,
-        item_name_snapshot: 'Penandaan dan penyimpanan obat High-Alert & LASA terpisah dengan stiker jelas',
-        category_name_snapshot: 'Sasaran Keselamatan Pasien (SKP)',
-        weight_snapshot: 2.0,
-        answer: 'Tidak Sesuai',
-        notes: 'Ditemukan 2 ampul obat High-Alert di laci troli emergensi yang stikernya terkelupas dan segel troli belum diperbarui.',
-        supporting_evidence: 'Pemeriksaan troli emergensi IGD',
-        evidence_url: '',
-        recommendation: 'Segera tempel ulang stiker High-Alert merah dan lakukan penyegelan ulang bersama petugas Farmasi.',
-      },
-      {
-        id: 'a1000001-0000-4000-8000-000000000004',
-        supervision_id: sup1Id,
-        instrument_item_id: item4Id,
-        item_name_snapshot: 'Ketersediaan handrub berbasis alkohol di setiap titik perawatan dan kepatuhan 5 momen cuci tangan',
-        category_name_snapshot: 'Pencegahan & Pengendalian Infeksi (PPI) dan Kesiapan Fasilitas',
-        weight_snapshot: 1.5,
-        answer: 'Sesuai',
-        notes: 'Handrub tersedia di setiap bed IGD.',
-        supporting_evidence: 'Inspeksi bed IGD',
-        evidence_url: '',
-        recommendation: '',
-      },
-      {
-        id: 'a1000001-0000-4000-8000-000000000005',
-        supervision_id: sup1Id,
-        instrument_item_id: item5Id,
-        item_name_snapshot: 'Pemilahan limbah medis tajam (safety box) dan limbah infeksius tidak melebihi 3/4 kapasitas',
-        category_name_snapshot: 'Pencegahan & Pengendalian Infeksi (PPI) dan Kesiapan Fasilitas',
-        weight_snapshot: 1.5,
-        answer: 'Sesuai',
-        notes: 'Safety box dalam batas aman.',
-        supporting_evidence: 'Inspeksi ruang tindakan',
-        evidence_url: '',
-        recommendation: '',
-      },
-    ],
-    [sup2Id]: [
-      {
-        id: 'a2000001-0000-4000-8000-000000000001',
-        supervision_id: sup2Id,
-        instrument_item_id: item1Id,
-        item_name_snapshot: 'Kepatuhan identifikasi pasien dengan minimal 2 identitas (Nama & Tanggal Lahir/No. RM)',
-        category_name_snapshot: 'Sasaran Keselamatan Pasien (SKP)',
-        weight_snapshot: 2.0,
-        answer: 'Sesuai',
-        notes: 'Sesuai standar.',
-        supporting_evidence: '',
-        evidence_url: '',
-        recommendation: '',
-      },
-      {
-        id: 'a2000001-0000-4000-8000-000000000002',
-        supervision_id: sup2Id,
-        instrument_item_id: item2Id,
-        item_name_snapshot: 'Penerapan komunikasi efektif SBAR dan TBAK pada serah terima / instruksi lisan',
-        category_name_snapshot: 'Sasaran Keselamatan Pasien (SKP)',
-        weight_snapshot: 1.5,
-        answer: 'Tidak Sesuai',
-        notes: 'Ditemukan 2 berkas CPPT instruksi telepon DPJP belum diparaf verifikasi TBAK dalam 1x24 jam.',
-        supporting_evidence: 'Audit RM Rawat Inap',
-        evidence_url: '',
-        recommendation: 'Lakukan sosialisasi ulang pengisian stempel TBAK dan reminder oleh Kepala Ruangan setiap pagi.',
-      },
-      {
-        id: 'a2000001-0000-4000-8000-000000000003',
-        supervision_id: sup2Id,
-        instrument_item_id: item3Id,
-        item_name_snapshot: 'Penandaan dan penyimpanan obat High-Alert & LASA terpisah dengan stiker jelas',
-        category_name_snapshot: 'Sasaran Keselamatan Pasien (SKP)',
-        weight_snapshot: 2.0,
-        answer: 'Sesuai',
-        notes: 'Lemari obat terkunci dan berlabel.',
-        supporting_evidence: '',
-        evidence_url: '',
-        recommendation: '',
-      },
-      {
-        id: 'a2000001-0000-4000-8000-000000000004',
-        supervision_id: sup2Id,
-        instrument_item_id: item4Id,
-        item_name_snapshot: 'Ketersediaan handrub berbasis alkohol di setiap titik perawatan dan kepatuhan 5 momen cuci tangan',
-        category_name_snapshot: 'Pencegahan & Pengendalian Infeksi (PPI) dan Kesiapan Fasilitas',
-        weight_snapshot: 1.5,
-        answer: 'Sesuai',
-        notes: 'Handrub terisi penuh.',
-        supporting_evidence: '',
-        evidence_url: '',
-        recommendation: '',
-      },
-      {
-        id: 'a2000001-0000-4000-8000-000000000005',
-        supervision_id: sup2Id,
-        instrument_item_id: item5Id,
-        item_name_snapshot: 'Pemilahan limbah medis tajam (safety box) dan limbah infeksius tidak melebihi 3/4 kapasitas',
-        category_name_snapshot: 'Pencegahan & Pengendalian Infeksi (PPI) dan Kesiapan Fasilitas',
-        weight_snapshot: 1.5,
-        answer: 'Sesuai',
-        notes: 'Pemilahan limbah sesuai SOP PPI.',
-        supporting_evidence: '',
-        evidence_url: '',
-        recommendation: '',
-      },
-    ],
-  };
-
-  const finding1Id = 'f1000001-0000-4000-8000-000000000001';
-  const finding2Id = 'f2000001-0000-4000-8000-000000000002';
-  const findings = [
-    {
-      id: finding1Id,
-      finding_number: 'TM-202611-201',
-      supervision_id: sup1Id,
-      supervision_number: 'SUP-202611-101',
-      unit_id: unitIdByCode['IGD-01'],
-      unit_name: 'IGD',
-      unit_category: 'INSTALASI GAWAT DARURAT',
-      instrument_item_id: item3Id,
-      item_name: 'Penandaan dan penyimpanan obat High-Alert & LASA terpisah dengan stiker jelas',
-      category_name: 'Sasaran Keselamatan Pasien (SKP)',
-      description: 'Ditemukan 2 ampul obat High-Alert di laci troli emergensi yang stikernya terkelupas dan segel troli belum diperbarui.',
-      evidence_url: '',
-      risk_level: 'Tinggi',
-      recommendation: 'Segera tempel ulang stiker High-Alert merah dan lakukan penyegelan ulang bersama petugas Farmasi.',
-      pic_id: komiteProfile.id,
-      pic_name: komiteProfile.full_name,
-      due_date: '2026-11-22',
-      status: 'Belum Ditindaklanjuti',
-      created_at: now,
-    },
-    {
-      id: finding2Id,
-      finding_number: 'TM-202611-202',
-      supervision_id: sup2Id,
-      supervision_number: 'SUP-202611-102',
-      unit_id: unitIdByCode['RI-01'],
-      unit_name: 'Ruang Perawatan',
-      unit_category: 'RAWAT INAP',
-      instrument_item_id: item2Id,
-      item_name: 'Penerapan komunikasi efektif SBAR dan TBAK pada serah terima / instruksi lisan',
-      category_name: 'Sasaran Keselamatan Pasien (SKP)',
-      description: 'Ditemukan 2 berkas CPPT instruksi telepon DPJP belum diparaf verifikasi TBAK dalam 1x24 jam.',
-      evidence_url: '',
-      risk_level: 'Sedang',
-      recommendation: 'Lakukan sosialisasi ulang pengisian stempel TBAK dan reminder oleh Kepala Ruangan setiap pagi.',
-      pic_id: komiteProfile.id,
-      pic_name: komiteProfile.full_name,
-      due_date: '2026-11-30',
-      status: 'Dalam Proses',
-      created_at: now,
-    },
-  ];
-
-  const followUp1Id = 'fb000001-0000-4000-8000-000000000001';
-  const follow_ups = [
-    {
-      id: followUp1Id,
-      finding_id: finding2Id,
-      root_cause: 'Perawat jaga malam belum menempelkan stempel TBAK saat menerima instruksi lisan via telepon.',
-      corrective_action: 'Menempelkan stempel TBAK di meja nurse station dan melengkapi paraf DPJP saat visite pagi.',
-      preventive_action: 'Briefing pre-conference setiap pergantian shift mengenai kepatuhan TBAK 1x24 jam.',
-      responsible_person: 'Kepala Ruangan Rawat Inap & Komite Mutu',
-      resources_needed: 'Stempel TBAK tambahan di setiap nurse station',
-      target_date: '2026-11-25',
-      execution_date: '2026-11-17',
-      evidence_url: '',
-      status: 'Dalam Proses',
-      submitted_by: komiteProfile.id,
-      submitted_by_name: komiteProfile.full_name,
-      submitted_at: now,
-    },
-  ];
-
   return {
     version: 1,
     updated_at: now,
@@ -661,26 +400,12 @@ export function buildInitialSeedDatabase(): SupabaseCloudDatabase {
     periods,
     instruments,
     schedules: [],
-    supervisions,
-    supervision_answers,
-    findings,
-    follow_ups,
+    supervisions: [],
+    supervision_answers: {},
+    findings: [],
+    follow_ups: [],
     verification_logs: [],
-    notifications: [
-      {
-        id: 'n1000001-0000-4000-8000-000000000001',
-        recipient_id: null,
-        recipient_role: 'KOMITE_MUTU',
-        unit_id: unitIdByCode['IGD-01'],
-        title: 'Temuan Baru Risiko Tinggi di IGD',
-        message: 'Temuan TM-202611-201 pada indikator Obat High-Alert memerlukan tindak lanjut perbaikan segera.',
-        category: 'warning',
-        related_table: 'findings',
-        related_id: finding1Id,
-        is_read: false,
-        created_at: now,
-      },
-    ],
+    notifications: [],
     audit_logs: [
       {
         id: 'l1000001-0000-4000-8000-000000000001',
@@ -839,6 +564,35 @@ export function ensureInstrumentIndicatorsUpToDate(db: SupabaseCloudDatabase): b
         });
         modified = true;
       }
+    }
+  }
+
+  // Sinkronkan data supervisi dengan data temuan monitoring:
+  // Jika supervisi memiliki jawaban "Tidak Sesuai" (atau berasal dari data contoh SUP-202611-101 / SUP-202611-102)
+  // tetapi seluruh data temuan monitoring-nya sudah dihapus, hapus juga record supervisi tersebut
+  // agar capaian di Dashboard 100% berkesesuaian dengan data di Monitoring.
+  if (Array.isArray(db.supervisions) && db.supervisions.length > 0) {
+    const activeFindingSupIds = new Set(
+      (db.findings || []).map((f: any) => f.supervision_id).filter(Boolean)
+    );
+    const beforeLen = db.supervisions.length;
+    db.supervisions = db.supervisions.filter((s: any) => {
+      const isLegacySeed =
+        s.supervision_number === 'SUP-202611-101' || s.supervision_number === 'SUP-202611-102';
+      const hadNonCompliant =
+        Number(s.compliant_count || 0) < Number(s.applicable_count || 0) ||
+        (db.supervision_answers?.[s.id] || []).some((a: any) => a.answer === 'Tidak Sesuai');
+
+      if ((isLegacySeed || hadNonCompliant) && !activeFindingSupIds.has(s.id)) {
+        if (db.supervision_answers && db.supervision_answers[s.id]) {
+          delete db.supervision_answers[s.id];
+        }
+        return false;
+      }
+      return true;
+    });
+    if (db.supervisions.length !== beforeLen) {
+      modified = true;
     }
   }
 

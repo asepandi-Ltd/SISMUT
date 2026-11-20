@@ -843,6 +843,49 @@ export function createApiApp() {
     }
   });
 
+  app.delete('/api/supervisions/:id', async (req, res) => {
+    try {
+      const db = await loadSupabaseDatabase();
+      const target = db.supervisions.find((s) => s.id === req.params.id);
+      if (!target) {
+        return res.status(404).json({ error: 'Data supervisi tidak ditemukan di Supabase.' });
+      }
+
+      const relatedFindingIds = new Set(
+        db.findings.filter((f) => f.supervision_id === req.params.id).map((f) => f.id)
+      );
+
+      db.supervisions = db.supervisions.filter((s) => s.id !== req.params.id);
+      if (db.supervision_answers && db.supervision_answers[req.params.id]) {
+        delete db.supervision_answers[req.params.id];
+      }
+      db.findings = db.findings.filter((f) => f.supervision_id !== req.params.id);
+      db.follow_ups = (db.follow_ups || []).filter((fu) => !relatedFindingIds.has(fu.finding_id));
+      db.verification_logs = (db.verification_logs || []).filter(
+        (v) => !relatedFindingIds.has(v.finding_id)
+      );
+
+      db.audit_logs.unshift({
+        id: crypto.randomUUID(),
+        user_id: null,
+        user_name: 'Petugas SISMUT',
+        user_role: 'SUPER_ADMIN',
+        action: 'DELETE_SUPERVISION',
+        table_name: 'supervisions',
+        record_id: req.params.id,
+        reason: `Menghapus data supervisi ${target.supervision_number} (${target.unit_name}) beserta seluruh temuan & capaiannya`,
+        old_data: target,
+        new_data: null,
+        created_at: new Date().toISOString(),
+      });
+
+      await saveSupabaseDatabase(db);
+      return res.json({ ok: true });
+    } catch (err: any) {
+      return res.status(500).json({ error: err.message });
+    }
+  });
+
   // Findings & Follow-ups
   app.get('/api/findings', async (_req, res) => {
     try {
@@ -928,6 +971,20 @@ export function createApiApp() {
       db.verification_logs = (db.verification_logs || []).filter(
         (v) => v.finding_id !== req.params.id
       );
+
+      // Jika seluruh temuan dari suatu supervisi telah dihapus di Monitoring,
+      // hapus juga data supervisi terkait agar capaian di Dashboard & Analisis berkesesuaian.
+      if (target.supervision_id) {
+        const hasOtherFindings = db.findings.some(
+          (f) => f.supervision_id === target.supervision_id
+        );
+        if (!hasOtherFindings) {
+          db.supervisions = db.supervisions.filter((s) => s.id !== target.supervision_id);
+          if (db.supervision_answers && db.supervision_answers[target.supervision_id]) {
+            delete db.supervision_answers[target.supervision_id];
+          }
+        }
+      }
 
       db.audit_logs.unshift({
         id: crypto.randomUUID(),

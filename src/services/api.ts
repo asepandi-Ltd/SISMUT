@@ -421,6 +421,38 @@ function ensureClientInstrumentIndicatorsUpToDate(db: CloudDatabaseShape): void 
       }
     }
   }
+
+  // Sinkronisasi Supervisi & Monitoring: hapus supervisi yang seluruh temuannya sudah dihapus
+  if (Array.isArray(db.supervisions)) {
+    const activeFindingSupervisionIds = new Set(
+      (db.findings || []).map((f) => f.supervision_id).filter(Boolean)
+    );
+    const legacyDummyIds = new Set([
+      '670fc0aa-28e3-4449-90cb-9362210e3015',
+      'a83be4a1-2852-415d-a5f1-287b863e37c0',
+    ]);
+    db.supervisions = db.supervisions.filter((s) => {
+      const hasRemainingFindings = activeFindingSupervisionIds.has(s.id);
+      if (hasRemainingFindings) return true;
+      if (
+        legacyDummyIds.has(s.id) ||
+        s.supervision_number === 'SUP-202611-101' ||
+        s.supervision_number === 'SUP-202611-102'
+      ) {
+        if (db.supervision_answers && db.supervision_answers[s.id]) {
+          delete db.supervision_answers[s.id];
+        }
+        return false;
+      }
+      if ((db.findings || []).length === 0) {
+        if (db.supervision_answers && db.supervision_answers[s.id]) {
+          delete db.supervision_answers[s.id];
+        }
+        return false;
+      }
+      return true;
+    });
+  }
 }
 
 let cachedCloudDb: CloudDatabaseShape | null = null;
@@ -1256,6 +1288,32 @@ export const api = {
     );
   },
 
+  async deleteSupervision(id: string): Promise<{ ok: boolean }> {
+    return supabaseApiFetch<{ ok: boolean }>(
+      `/api/supervisions/${id}`,
+      {
+        method: 'DELETE',
+      },
+      async () => {
+        const db = await fetchDirectSupabaseCloudDb();
+        db.supervisions = (db.supervisions || []).filter((s) => s.id !== id);
+        if (db.supervision_answers && db.supervision_answers[id]) {
+          delete db.supervision_answers[id];
+        }
+        const relatedFindingIds = new Set(
+          (db.findings || []).filter((f) => f.supervision_id === id).map((f) => f.id)
+        );
+        db.findings = (db.findings || []).filter((f) => f.supervision_id !== id);
+        db.follow_ups = (db.follow_ups || []).filter((fu) => !relatedFindingIds.has(fu.finding_id));
+        db.verification_logs = (db.verification_logs || []).filter(
+          (v) => !relatedFindingIds.has(v.finding_id)
+        );
+        await saveDirectSupabaseCloudDb(db);
+        return { ok: true };
+      }
+    );
+  },
+
   // --------------------------------------------------------------------------
   // FINDINGS & FOLLOW-UPS (SUPABASE)
   // --------------------------------------------------------------------------
@@ -1342,9 +1400,21 @@ export const api = {
       },
       async () => {
         const db = await fetchDirectSupabaseCloudDb();
+        const target = (db.findings || []).find((f) => f.id === id);
         db.findings = db.findings.filter((f) => f.id !== id);
         db.follow_ups = (db.follow_ups || []).filter((fu) => fu.finding_id !== id);
         db.verification_logs = (db.verification_logs || []).filter((v) => v.finding_id !== id);
+        if (target?.supervision_id) {
+          const remainingForSupervision = db.findings.some(
+            (f) => f.supervision_id === target.supervision_id
+          );
+          if (!remainingForSupervision) {
+            db.supervisions = (db.supervisions || []).filter((s) => s.id !== target.supervision_id);
+            if (db.supervision_answers && db.supervision_answers[target.supervision_id]) {
+              delete db.supervision_answers[target.supervision_id];
+            }
+          }
+        }
         await saveDirectSupabaseCloudDb(db);
         return { ok: true };
       }
@@ -1633,7 +1703,7 @@ export const api = {
     const resolutionStats = {
       total: filteredFindings.length,
       resolved,
-      avg_days: 3.5,
+      avg_days: resolved > 0 ? 3.5 : 0,
     };
 
     return {
